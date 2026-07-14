@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="H2 CRM">
+<meta name="theme-color" content="#d35400">
+<link rel="apple-touch-icon" href="icon-512.svg">
+<link rel="icon" href="icon-512.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.json">
+<title>H2 CRM</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;overflow:hidden;background:#1b2631;}
+  #loader{
+    position:fixed;inset:0;background:linear-gradient(160deg,#d35400 0%,#1b2631 100%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:Arial Black,sans-serif;color:white;
+  }
+  .logo{width:100px;height:100px;margin-bottom:20px;animation:pop .6s cubic-bezier(.34,1.56,.64,1) both;}
+  .app-name{font-size:1.4rem;font-weight:900;letter-spacing:.5px;margin-bottom:6px;animation:fade .8s .3s both;}
+  .app-sub{font-size:.75rem;color:rgba(255,255,255,.55);animation:fade .8s .5s both;}
+  .bar-wrap{width:130px;height:3px;background:rgba(255,255,255,.15);border-radius:3px;margin-top:24px;overflow:hidden;animation:fade .8s .4s both;}
+  .bar{height:100%;width:0;background:linear-gradient(90deg,#f5c7a9,white);border-radius:3px;animation:load 1.6s .6s ease forwards;}
+  .ver{position:absolute;bottom:28px;font-size:.6rem;color:rgba(255,255,255,.25);letter-spacing:1px;}
+  /* particles */
+  .p{position:absolute;border-radius:2px;animation:up var(--d,4s) var(--dl,0s) ease-in infinite;opacity:0;}
+  @keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @keyframes load{0%{width:0}60%{width:70%}100%{width:100%}}
+  @keyframes up{0%{transform:translateY(0) rotate(var(--r,0deg));opacity:.7}100%{transform:translateY(-110vh) rotate(calc(var(--r,0deg)+180deg));opacity:0}}
+  iframe{position:fixed;inset:0;width:100%;height:100%;border:none;opacity:0;transition:opacity .4s;}
+  iframe.ready{opacity:1;}
+</style>
+</head>
+<body>
+<div id="loader">
+  <!-- Particles -->
+  <div class="p" style="left:8%;bottom:-20px;width:12px;height:12px;background:#f5c7a9;--d:4s;--dl:0s;--r:15deg;"></div>
+  <div class="p" style="left:22%;bottom:-20px;width:8px;height:20px;background:rgba(255,255,255,.3);--d:3.5s;--dl:.8s;--r:-10deg;"></div>
+  <div class="p" style="left:55%;bottom:-20px;width:14px;height:14px;background:#d97706;--d:5s;--dl:.3s;--r:25deg;"></div>
+  <div class="p" style="left:75%;bottom:-20px;width:9px;height:9px;background:rgba(255,255,255,.4);--d:4.2s;--dl:1.2s;--r:-20deg;"></div>
+  <div class="p" style="left:88%;bottom:-20px;width:11px;height:11px;background:#f5c7a9;--d:3.8s;--dl:.5s;--r:30deg;"></div>
+  <img src="icon-512.svg" class="logo" alt="H2 CRM">
+  <div class="app-name">H2 CRM</div>
+  <div class="app-sub">Sales &amp; Customer Management</div>
+  <div class="bar-wrap"><div class="bar"></div></div>
+  <div class="ver">v1.226</div>
+</div>
+
+<iframe id="app" src="https://script.google.com/macros/s/AKfycbx6XFIa-FvpDmQP_KM_G5_yvMTFC4kARle0u0lgTd0Ca_Zm7Cy21bgSdMvnw8g1tF-O/exec" allow="camera;microphone" allowfullscreen></iframe>
+
+<script>
+  var iframe = document.getElementById('app');
+  var loader = document.getElementById('loader');
+
+  // Register service worker for installability
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  }
+
+  // Show iframe once loaded, hide loader
+  iframe.addEventListener('load', function() {
+    setTimeout(function() {
+      iframe.classList.add('ready');
+      setTimeout(function() {
+        loader.style.opacity = '0';
+        loader.style.transition = 'opacity .5s';
+        setTimeout(function() { loader.remove(); }, 500);
+      }, 200);
+    }, 300);
+  });
+
+  // Fallback: hide loader after 5s regardless
+  setTimeout(function() {
+    iframe.classList.add('ready');
+    loader.style.opacity = '0';
+    loader.style.transition = 'opacity .5s';
+    setTimeout(function() { if(loader.parentNode) loader.remove(); }, 500);
+  }, 5000);
+</script>
+</body>
+</html>
